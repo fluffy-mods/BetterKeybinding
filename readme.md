@@ -12,5 +12,6 @@ A simple keybinding container.
     - set a default key/button/direction
     - set modifiers (optional)
  - `KeyBind.Draw( someRect )` draws a config widget
- - Don't forget to Scribe the result!
+    - Don't forget to Scribe the result!
+ - `KeyBind.JustPressed` checks for interaction
 
