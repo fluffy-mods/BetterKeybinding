@@ -4,6 +4,8 @@ A simple keybinding container.
 - allows mouse input, e.g.: <kbd>LMB</kbd>, <kbd>RMB</kbd>, <kbd>Shift</kbd> + <kbd>ScrollUp</kbd>
 - includes a simple config widget.
 
+![Preview of config widget](preview.gif)
+
 # How to use
  - Grab the `.dll` from the `obj` folder, or build it yourself. 
  - Reference the dll: `using BetterKeybindings`
