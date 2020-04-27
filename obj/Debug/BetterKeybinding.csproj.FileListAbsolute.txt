@@ -1,0 +1,6 @@
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\bin\Debug\BetterKeybinding.dll
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\bin\Debug\BetterKeybinding.pdb
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\obj\Debug\BetterKeybinding.csprojAssemblyReference.cache
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\obj\Debug\BetterKeybinding.csproj.CoreCompileInputs.cache
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\obj\Debug\BetterKeybinding.dll
+D:\Synced\Other\Mods\Fluffy Mods\TOOLS\BetterKeybinding\obj\Debug\BetterKeybinding.pdb
