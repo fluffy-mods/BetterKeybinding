@@ -94,7 +94,7 @@ namespace BetterKeybinding
                 else if (Event.current.type == EventType.ScrollWheel)
                 {
                     type = InputType.ScrollWheel;
-                    scrollDirection = Event.current.delta;
+                    scrollDirection = Event.current.delta.normalized;
                     modifiers = Event.current.modifiers;
                     editMode = false;
                 }
