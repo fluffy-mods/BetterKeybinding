@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -20,28 +21,30 @@ namespace BetterKeybinding
             // scribe
         }
 
-        public KeyBind( string label, int button, EventModifiers modifiers = EventModifiers.None )
+        private KeyBind( string label, EventModifiers modifiers )
+        {
+            this.label = label;
+            this.modifiers = modifiers;
+        }
+
+        public KeyBind( string label, int button, EventModifiers modifiers = EventModifiers.None ): this( label, modifiers )
         {
             type = InputType.MouseButton;
             this.button = button;
-            this.modifiers = modifiers;
-            this.label = label;
         }
 
-        public KeyBind( string label, Vector2 scrollDirection, EventModifiers modifiers = EventModifiers.None )
+        public KeyBind( string label, Vector2 scrollDirection, EventModifiers modifiers = EventModifiers.None ) : this(
+            label, modifiers )
         {
             type = InputType.ScrollWheel;
             this.scrollDirection = scrollDirection;
-            this.modifiers = modifiers;
-            this.label = label;
         }
 
-        public KeyBind( string label, KeyCode key, EventModifiers modifiers = EventModifiers.None )
+        public KeyBind( string label, KeyCode key, EventModifiers modifiers = EventModifiers.None ) : this(
+            label, modifiers )
         {
             type = InputType.Key;
             this.key = key;
-            this.modifiers = modifiers;
-            this.label = label;
         }
 
         public static implicit operator KeyBind( KeyBindingDef keybinding )
@@ -49,18 +52,18 @@ namespace BetterKeybinding
             return new KeyBind( keybinding.label, keybinding.MainKey );
         }
 
-        public void Draw(Rect canvas, int margin = 6)
+        public void Draw(Rect canvas, int margin = 6 )
         {
             var labelRect = new Rect(
-                    canvas.min,
-                    new Vector2(canvas.width * 2 / 3f, canvas.height))
-               .ContractedBy(margin);
+                canvas.xMin,
+                canvas.yMin + margin / 2,
+                canvas.width * 2 / 3f,
+                canvas.height - margin );
             var previewRect = new Rect(
-                    labelRect.xMax,
-                    canvas.yMin,
-                    canvas.width / 3f,
-                    canvas.height )
-               .ContractedBy( margin );
+                labelRect.xMax,
+                canvas.yMin + margin,
+                canvas.width / 3f,
+                canvas.height - margin );
 
             Widgets.Label( labelRect, label.CapitalizeFirst() );
             if ( Widgets.ButtonInvisible( previewRect ) ) editMode = true;
@@ -106,28 +109,56 @@ namespace BetterKeybinding
 
             Text.Anchor = TextAnchor.UpperLeft;
         }
+
+        public string LabelShort
+        {
+            get
+            {
+                var keyLabel = ( modifiers & ~EventModifiers.FunctionKey ) == EventModifiers.None
+                    ? ""
+                    : ModifierLabelShort( modifiers ) + " + ";
+                switch ( type )
+                {
+                    case InputType.Key:
+                        keyLabel += KeyLabel( key );
+                        break;
+                    case InputType.MouseButton:
+                        keyLabel += ButtonLabel( button );
+                        break;
+                    case InputType.ScrollWheel:
+                        keyLabel += ScrollLabel( scrollDirection );
+                        break;
+                    default:
+                        keyLabel += "Unknown";
+                        break;
+                }
+
+                return keyLabel;
+            }
+        }
+
         public string Label
         {
             get
             {
-                var label = modifiers == EventModifiers.None ? "" : ModifierLabel( modifiers ) + " + ";
+                var keyLabel = ( modifiers & ~EventModifiers.FunctionKey ) == EventModifiers.None ? "" : ModifierLabel( modifiers ) + " + ";
                 switch ( type )
                 {
                     case InputType.Key:
-                        label += KeyLabel( key );
+                        keyLabel += KeyLabel( key );
                         break;
                     case InputType.MouseButton:
-                        label += ButtonLabel( button );
+                        keyLabel += ButtonLabel( button );
                         break;
                     case InputType.ScrollWheel:
-                        label += ScrollLabel( scrollDirection );
+                        keyLabel += ScrollLabel( scrollDirection );
                         break;
                     default:
-                        label += "Unknown";
+                        keyLabel += "Unknown";
                         break;
                 }
 
-                return label;
+                return keyLabel;
             }
         }
 
@@ -136,7 +167,18 @@ namespace BetterKeybinding
             return string.Join(
                 " + ",
                 modifiers.GetAllSelectedItems<EventModifiers>()
-                         .Where( m => m != EventModifiers.None )
+                         .Where( m => m != EventModifiers.None
+                                   && m != EventModifiers.FunctionKey )
+                         .Select( e => e == EventModifiers.Control ? "Ctrl" : e.ToString() ) );
+        }
+
+        public static string ModifierLabelShort( EventModifiers modifiers )
+        {
+            return string.Join(
+                " + ",
+                modifiers.GetAllSelectedItems<EventModifiers>()
+                         .Where( m => m != EventModifiers.None
+                                   && m != EventModifiers.FunctionKey )
                          .Select( e => e.ToString() ) );
         }
 
